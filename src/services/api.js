@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // ⚠️ PENTING: Ganti dengan IP Address laptop Anda
 // Cara cek IP: buka CMD, ketik "ipconfig", lihat IPv4 Address
-const API_BASE_URL = 'http://10.0.0.5/book_catalog_api/api';
+const API_BASE_URL = 'http://192.168.0.115/BookCatalogProduk/api';
 
 // Buat instance axios
 const api = axios.create({

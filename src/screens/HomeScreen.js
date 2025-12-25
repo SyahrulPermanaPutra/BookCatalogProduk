@@ -82,12 +82,19 @@ export default function HomeScreen({ navigation }) {
     );
   };
 
+  const canDeleteBook = (book) => {
+    if (!userData) return false;
+    return book.user_id === userData.id;
+  };
+
+
   const renderBook = ({ item }) => (
     <View style={styles.bookCard}>
       <Image
         source={{ uri: item.cover_url || 'https://via.placeholder.com/100x150' }}
         style={styles.bookCover}
       />
+
       <View style={styles.bookInfo}>
         <Text style={styles.bookTitle} numberOfLines={2}>
           {item.title}
@@ -96,24 +103,35 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.bookPublisher}>
           {item.publisher} • {item.year}
         </Text>
+        <Text style={styles.bookCreator}>
+          👤 Ditambahkan oleh: {item.user_name}
+        </Text>
         <Text style={styles.bookPages}>{item.pages} halaman</Text>
       </View>
+
       <View style={styles.bookActions}>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => navigation.navigate('EditBook', { book: item })}
-        >
-          <Text style={styles.editButtonText}>✏️</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDelete(item)}
-        >
-          <Text style={styles.deleteButtonText}>🗑️</Text>
-        </TouchableOpacity>
+        {/* Edit juga hanya untuk pemilik */}
+        {canDeleteBook(item) && (
+          <>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => navigation.navigate('EditBook', { book: item })}
+            >
+              <Text style={styles.editButtonText}>✏️</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => handleDelete(item)}
+            >
+              <Text style={styles.deleteButtonText}>🗑️</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </View>
   );
+
 
   if (loading) {
     return (
@@ -198,6 +216,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#1F2937',
+  },
+  bookCreator: {
+    fontSize: 12,
+    color: '#374151',
+    marginTop: 6,
+    fontStyle: 'italic',
   },
   subtitle: {
     fontSize: 14,
